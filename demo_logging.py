@@ -21,9 +21,8 @@ class VerboseExceptionFormatter(logging.Formatter):
     def formatException(self, exc_info):
         msg = stackprinter.format(exc_info)
         lines = msg.split('\n')
-        lines_indented = ["  ┆ " + line + "\n" for line in lines]
-        msg_indented = "".join(lines_indented)
-        return msg_indented
+        lines_indented = [f"  ┆ {line}" + "\n" for line in lines]
+        return "".join(lines_indented)
 
 def configure_logger(logger_name=None):
     fmt = '%(asctime)s %(levelname)s: %(message)s'

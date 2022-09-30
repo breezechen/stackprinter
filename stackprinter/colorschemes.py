@@ -81,7 +81,7 @@ class darkbg2(ColorScheme):
         hue = self.rng.uniform(0.05,0.7)
         # if hue < 0:
         #     hue = hue + 1
-        sat = 1. if highlight else 1.
+        sat = 1.
         val = 0.8 #if highlight else 0.5
         bold = highlight
 
@@ -115,7 +115,7 @@ class darkbg3(ColorScheme):
         hue = self.rng.uniform(0.05,0.7)
         # if hue < 0:
         #     hue = hue + 1
-        sat = 1. if highlight else 1.
+        sat = 1.
         val = 0.8 if highlight else 0.5
         bold = highlight
 

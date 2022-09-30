@@ -13,8 +13,7 @@ _FrameInfo = namedtuple('_FrameInfo',
 class FrameInfo(_FrameInfo):
     # give this namedtuple type a friendlier string representation
     def __str__(self):
-        return ("<FrameInfo %s, line %s, scope %s>" %
-                (self.filename, self.lineno, self.function))
+        return f"<FrameInfo {self.filename}, line {self.lineno}, scope {self.function}>"
 
 
 def get_info(tb_or_frame, lineno=None, suppressed_vars=[]):
@@ -81,7 +80,7 @@ def get_info(tb_or_frame, lineno=None, suppressed_vars=[]):
         frame = tb_or_frame
         lineno = frame.f_lineno if lineno is None else lineno
     else:
-        raise ValueError('Cant inspect this: ' + repr(tb_or_frame))
+        raise ValueError(f'Cant inspect this: {repr(tb_or_frame)}')
 
     filename = inspect.getsourcefile(frame) or inspect.getfile(frame)
     function = frame.f_code.co_name
@@ -104,9 +103,16 @@ def get_info(tb_or_frame, lineno=None, suppressed_vars=[]):
     names = name2lines.keys()
     assignments = get_vars(names, frame.f_locals, frame.f_globals, suppressed_vars)
 
-    finfo =  FrameInfo(filename, function, lineno, source_map, head_lns,
-                       line2names, name2lines, assignments)
-    return finfo
+    return FrameInfo(
+        filename,
+        function,
+        lineno,
+        source_map,
+        head_lns,
+        line2names,
+        name2lines,
+        assignments,
+    )
 
 
 def get_source(frame):

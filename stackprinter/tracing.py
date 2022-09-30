@@ -44,10 +44,7 @@ def trace(*args, suppressed_paths=[], **formatter_kwargs):
             return result
         return wrapper
 
-    if args:
-        return deco(args[0])
-    else:
-        return deco
+    return deco(args[0]) if args else deco
 
 
 class TracePrinter():
@@ -152,7 +149,7 @@ class TracePrinter():
             line_info = (filepath, frame.f_lineno, frame.f_code.co_name)
             frame_str = 'File %s, line %s, in %s\n' % line_info
             if len(note) > 123:
-                note == note[:120] + '...'
+                note == f'{note[:120]}...'
         else:
             frame_str = self.fmt(frame)
 
@@ -176,13 +173,12 @@ def add_indent(string, depth=1, max_depth=10):
     depth = max(depth, 0)
 
     if depth > max_depth:
-        indent = '%s   ' % depth + '    ' * (depth % max_depth)
+        indent = f'{depth}   ' + '    ' * (depth % max_depth)
     else:
         indent = '    ' * depth
 
     lines = [indent + line + '\n' for line in string.splitlines()]
-    indented = ''.join(lines)
-    return indented
+    return ''.join(lines)
 
 
 def count_stack(frame):

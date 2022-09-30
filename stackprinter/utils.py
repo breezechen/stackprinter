@@ -93,8 +93,7 @@ def get_ansi_tpl(hue, sat, val, bold=False):
     # print(r,g,b,point)
 
     bold_tp = '1;' if bold else ''
-    code_tpl = ('\u001b[%s38;5;%dm' % (bold_tp, point)) + '%s\u001b[0m'
-    return code_tpl
+    return ('\u001b[%s38;5;%dm' % (bold_tp, point)) + '%s\u001b[0m'
 
 
 
