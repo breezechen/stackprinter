@@ -165,10 +165,7 @@ class FrameFormatter():
             ln_prev = ln
 
             if n_lines > 1:
-                if ln == lineno:
-                    tpl = self.marked_sourceline_tpl
-                else:
-                    tpl = self.sourceline_tpl
+                tpl = self.marked_sourceline_tpl if ln == lineno else self.sourceline_tpl
                 msg += tpl % (ln, line)
             else:
                 msg += self.single_sourceline_tpl % line
@@ -185,7 +182,7 @@ class FrameFormatter():
                                    wrap=self.line_wrap)
             assign_str = self.val_tpl % (name, val_str)
             msgs.append(assign_str)
-        if len(msgs) > 0:
+        if msgs:
             return self.sep_vars + '\n' + ''.join(msgs) + self.sep_vars + '\n\n'
         else:
             return ''
@@ -222,7 +219,7 @@ class FrameFormatter():
             if not set(source_lines).issubset(fi.source_map.keys()):
                 debug_vals = [source_lines, fi.head_lns, fi.source_map.keys()]
                 info = ', '.join(str(p) for p in debug_vals)
-                raise Exception("Picked an invalid source context: %s" % info)
+                raise Exception(f"Picked an invalid source context: {info}")
             trimmed_source_map = trim_source(fi.source_map, source_lines)
         else:
             trimmed_source_map = {}
@@ -343,7 +340,7 @@ class ColorfulFrameFormatter(FrameFormatter):
             hue, sat, val, bold = colormap.get(name, self.colors['var_invisible'])
             clr_str = get_ansi_tpl(hue, sat, val, bold) % assign_str
             msgs.append(clr_str)
-        if len(msgs) > 0:
+        if msgs:
             return self.sep_vars + '\n' + ''.join(msgs) + self.sep_vars + '\n\n'
         else:
             return ''

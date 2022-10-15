@@ -6,7 +6,7 @@ def bomb(msg):
     try:
         raise Exception(msg)
     except Exception as e:
-        raise Exception(msg+'_b') from e
+        raise Exception(f'{msg}_b') from e
 
 try:
     bomb('1')

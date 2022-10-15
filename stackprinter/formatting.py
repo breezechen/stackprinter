@@ -79,10 +79,7 @@ def format_stack(frames, style='plaintext', source_lines=5,
         fi = ex.get_info(frame, suppressed_vars=suppressed_vars)
         is_boring = match(fi.filename, suppressed_paths)
         if is_boring:
-            if parent_is_boring:
-                formatter = minimal_formatter
-            else:
-                formatter = reduced_formatter
+            formatter = minimal_formatter if parent_is_boring else reduced_formatter
         else:
             formatter = verbose_formatter
 
@@ -184,9 +181,14 @@ def format_exc_info(etype, evalue, tb, style='plaintext', add_summary='auto',
                     summary = format_summary(frameinfos, style=style,
                                              reverse=reverse, **kwargs)
                     summary += '\n'
-                    parts.append('---- (full traceback below) ----\n\n' if reverse else
-                                 '---- (full traceback above) ----\n')
-                    parts.append(summary)
+                    parts.extend(
+                        (
+                            '---- (full traceback below) ----\n\n'
+                            if reverse
+                            else '---- (full traceback above) ----\n',
+                            summary,
+                        )
+                    )
 
         exc = format_exception_message(etype, evalue, style=style)
         parts.append('\n\n' if reverse else '')
@@ -207,7 +209,7 @@ def format_exc_info(etype, evalue, tb, style='plaintext', add_summary='auto',
                                             exc.__traceback__,
                                             chain=False)
         where = getattr(exc, 'where', None)
-        context = " while formatting " + str(where) if where else ''
+        context = f" while formatting {str(where)}" if where else ''
         msg = 'Stackprinter failed%s:\n%s\n' % (context, ''.join(our_tb[-2:]))
         msg += 'So here is your original traceback at least:\n\n'
         msg += ''.join(traceback.format_exception(etype, evalue, tb))
@@ -228,13 +230,12 @@ def format_exception_message(etype, evalue, tb=None, style='plaintext'):
 
     if style == 'plaintext':
         return type_str + val_str
-    else:
-        sc = getattr(colorschemes, style)
+    sc = getattr(colorschemes, style)
 
-        clr_head = get_ansi_tpl(*sc.colors['exception_type'])
-        clr_msg = get_ansi_tpl(*sc.colors['exception_msg'])
+    clr_head = get_ansi_tpl(*sc.colors['exception_type'])
+    clr_msg = get_ansi_tpl(*sc.colors['exception_msg'])
 
-        return clr_head % type_str + clr_msg % val_str
+    return clr_head % type_str + clr_msg % val_str
 
 
 def _walk_traceback(tb):

@@ -2,20 +2,17 @@ from stackprinter import trace, TracePrinter
 import numpy as np
 
 def dosomething(x):
-    y = dosomethingelse(x)
-    return y
+    return dosomethingelse(x)
 
 def dosomethingelse(y):
     a = 2*y
-    b = doYetAnotherThing(y)
     # raise Exception('ahoi')
-    return b
+    return doYetAnotherThing(y)
 
 def doYetAnotherThing(z):
     a = z
     b = {'a': np.ones(1)}
-    zup = np.ones(0)
-    return zup
+    return np.ones(0)
 
 
 

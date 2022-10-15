@@ -163,7 +163,7 @@ def _tokenize(source_lines):
                 # this name seems to be part of an attribute lookup,
                 # which we want to treat as one long name.
                 prev = tokens[-1]
-                extended_name = prev[1] + "." + string
+                extended_name = f"{prev[1]}.{string}"
                 old_eline, old_ecol = prev[3]
                 end_line = max(old_eline, eline)
                 end_col = max(old_ecol, ecol)

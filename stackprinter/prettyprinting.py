@@ -50,7 +50,7 @@ def format_value(value, indent=0, truncation=None, wrap=60,
         return '...'
 
     if isinstance(value, UnresolvedAttribute):
-        reason = "# %s" % (value.exc_type)
+        reason = f"# {value.exc_type}"
         val_tpl = reason + "\n%s = %s"
         lastval_str = format_value(value.last_resolvable_value,
                                    truncation=truncation, indent=3, depth=depth+1)
@@ -114,7 +114,7 @@ def format_dict(value, truncation, max_depth, depth):
             kstr = truncate(repr(k), MAXLEN_DICT_KEY_REPR)
             vstr = format_value(v, indent=len(kstr) + 3,
                                 truncation=truncation, depth=depth+1)
-            istr = "%s: %s" % (kstr, vstr)
+            istr = f"{kstr}: {vstr}"
             vstrs.append(istr)
             char_count += len(istr)
 
@@ -127,11 +127,11 @@ def format_dict(value, truncation, max_depth, depth):
 def format_iterable(value, truncation, max_depth, depth):
     typename = value.__class__.__name__
     if isinstance(value, list):
-        prefix = '[' if type(value) == list else "%s [" % typename
+        prefix = '[' if type(value) == list else f"{typename} ["
         postfix = ']'
 
     elif isinstance(value, tuple):
-        prefix = '(' if type(value) == tuple else "%s (" % typename
+        prefix = '(' if type(value) == tuple else f"{typename} ("
         postfix = ')'
 
     elif isinstance(value, set):
@@ -139,13 +139,13 @@ def format_iterable(value, truncation, max_depth, depth):
         postfix = '}'
 
 
-    length = len(value)
     val_str = ''
     if depth == max_depth:
         val_str += '...'
     else:
         linebreak = False
         char_count = 0
+        length = len(value)
         for i,v in enumerate(value):
             if char_count >= truncation:
                 val_str += "..."
@@ -161,7 +161,7 @@ def format_iterable(value, truncation, max_depth, depth):
                 if linebreak:
                     item_str += '\n'
                     linebreak = False
-                item_str += "%s%s" % (entry, sep)
+                item_str += f"{entry}{sep}"
             val_str += item_str
             char_count += len(item_str)
 
@@ -183,7 +183,7 @@ def format_array(arr, minimize=False):
             shape.append('')
         shape_str = "x".join(str(d) for d in shape)
         if len(shape_str) < 10:
-            prefix = "%s array(" % shape_str
+            prefix = f"{shape_str} array("
             msg = prefix
         else:
             prefix = ""
@@ -200,7 +200,7 @@ def format_array(arr, minimize=False):
         array_rep = np.array2string(arr, max_line_width=9000, prefix=prefix)
 
     if minimize and (len(array_rep) > 50 or arr.ndim > 1):
-        array_rep = "%s%s...%s" % ('[' * arr.ndim, arr.flatten()[0], ']' * arr.ndim)
+        array_rep = f"{'[' * arr.ndim}{arr.flatten()[0]}...{']' * arr.ndim}"
 
 
     msg += array_rep + suffix
@@ -235,7 +235,7 @@ def truncate(string, n):
         return string
     n = max(n, 0)
     if len(string) > (n+3):
-        string = "%s..." % string[:n].rstrip()
+        string = f"{string[:n].rstrip()}..."
     return string
 
 
@@ -253,7 +253,7 @@ def wrap_lines(string, max_width=80):
                 while k < length:
                     snippet = l[k:k+max_width]
                     if k > 0:
-                        snippet = " " + snippet
+                        snippet = f" {snippet}"
 
                     yield snippet
                     k += max_width
